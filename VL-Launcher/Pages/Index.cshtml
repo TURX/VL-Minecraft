@@ -1,0 +1,38 @@
+﻿@page
+@{
+    ViewData["Title"] = Translation.Translate("welcome");
+}
+
+<h1 class="display-4">
+    @Translation.Translate("welcome")
+    <small class="text-muted">@Translation.Translate("head")</small>
+</h1>
+
+<a class="btn btn-primary" asp-page="/Launcher">@Translation.Translate("launcher")</a>&emsp;<a class="btn btn-primary" asp-page="/About">@Translation.Translate("about")</a>
+
+<br /><br />
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Translation.Translate("welcome-dl-head")</h5>
+        <p class="card-text">@Translation.Translate("welcome-dl-txt")</p>
+    </div>
+</div>
+
+<br />
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Translation.Translate("welcome-auth-head")</h5>
+        <p class="card-text">@Translation.Translate("welcome-auth-txt")</p>
+    </div>
+</div>
+
+<br />
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Translation.Translate("welcome-unix-head")</h5>
+        <p class="card-text">@Translation.Translate("welcome-unix-txt")</p>
+    </div>
+</div>

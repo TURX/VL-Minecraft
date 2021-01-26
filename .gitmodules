@@ -1,0 +1,9 @@
+[submodule "Newtonsoft.Json"]
+	path = Newtonsoft.Json
+	url = https://github.com/JamesNK/Newtonsoft.Json.git
+[submodule "SharpZipLib"]
+	path = SharpZipLib
+	url = https://github.com/icsharpcode/SharpZipLib.git
+[submodule "CmlLib.Core"]
+	path = CmlLib.Core
+	url = https://github.com/TURX/CmlLib.Core.git

@@ -1,0 +1,41 @@
+﻿@page
+@model LauncherModel
+@{
+    ViewData["Title"] = Translation.Translate("about");
+}
+
+<h1 class="display-4">@Translation.Translate("about")</h1>
+
+<button type="button" class="btn btn-primary" onclick="window.history.back();">@Translation.Translate("back")</button>
+
+<br /><br />
+
+      <p>
+          <b>VL-Minecraft</b> @System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+          <br />
+          @Translation.Translate("copyright") &copy; 2021 TURX
+          <br />
+          @Translation.Translate("oss")
+      </p>
+
+<h4>@Translation.Translate("credits")</h4>
+
+Backend:
+
+<ul>
+    <li>BMCLAPI &copy; bangbang93 [Open API]</li>
+    <li>CmlLib.Core &copy; 2020 권세인 (AlphaBs) [MIT License]</li>
+    <li>ElectronNET.API &copy; 2017 Gregor Biswanger, Robert Mühsig [MIT License]</li>
+    <li>ICSharpCode.SharpZipLib &copy; 2000-2018 SharpZipLib Contributors [MIT License]</li>
+    <li>LZMA-SDK &copy; 2020 Mihir Mone [MIT License]</li>
+    <li>Newtonsoft.Json &copy; 2007 James Newton-King [MIT License]</li>
+</ul>
+
+Frontend:
+
+<ul>
+    <li>Bootstrap &copy; 2011-2018 Twitter, Inc., The Bootstrap Authors [MIT License]</li>
+    <li>jQuery &copy; OpenJS Foundation, other contributors [MIT License]</li>
+    <li>jQuery Validation &copy; Jörn Zaefferer [MIT License]</li>
+    <li>jQuery Validation Unobtrusive &copy; .NET Foundation [Apache License v2]</li>
+</ul>

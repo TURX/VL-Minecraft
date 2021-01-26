@@ -1,0 +1,38 @@
+{
+  "executable": "VL-Launcher",
+  "splashscreen": {
+    "imageFile": ""
+  },
+  "name": "VL-Launcher",
+  "author": "",
+  "singleInstance": false,
+  "environment": "Production",
+  "build": {
+    "appId": "launcher.vl.cstu.xyz",
+    "productName": "VL-Launcher",
+    "copyright": "Copyright © 2021 TURX",
+    "buildVersion": "0.0.2",
+    "compression": "maximum",
+    "win": {
+      "icon": "bin/Icons/icon.ico"
+    },
+    "directories": {
+      "output": "../../../bin/Desktop"
+    },
+    "extraResources": [
+      {
+        "from": "./bin",
+        "to": "bin",
+        "filter": [ "**/*" ]
+      }
+    ],
+    "files": [
+      {
+        "from": "./ElectronHostHook/node_modules",
+        "to": "ElectronHostHook/node_modules",
+        "filter": [ "**/*" ]
+      },
+      "**/*"
+    ]
+  }
+}

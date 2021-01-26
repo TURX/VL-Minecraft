@@ -1,0 +1,116 @@
+﻿@page
+@model LauncherModel
+@{
+    ViewData["Title"] = Translation.Translate("launcher");
+}
+
+<h1 class="display-4">@Translation.Translate("launcher")</h1>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/launcher.js" asp-append-version="true"></script>
+
+@if (HttpContext.Session.Get<string>("SuccessMsg") != null)
+{
+    <div class="alert alert-success" role="alert">
+        <strong>@Translation.Translate("success")</strong> @(HttpContext.Session.Get<string>("SuccessMsg"))
+    </div>
+    HttpContext.Session.Remove("SuccessMsg");
+}
+
+@if (HttpContext.Session.Get<string>("ErrorMsg") != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>@Translation.Translate("error")</strong> @(HttpContext.Session.Get<string>("ErrorMsg"))
+    </div>
+    HttpContext.Session.Remove("ErrorMsg");
+}
+
+<p>@Translation.Translate("current-dir"): @Utility.GetWorkingDir()</p>
+
+<div class="collapse" id="prog">
+    <div class="card">
+        <div class="card-body">
+            <div class="progress">
+                <div id="prog-whole" class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            </div>
+            <br />
+            <div class="progress">
+                <div id="prog-part" class="progress-bar bg-info progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            </div>
+            <br />
+            <div class="container">
+                <div class="row">
+                    @Translation.Translate("file"):&nbsp;
+                    [<div id="prog-kind"></div>]&nbsp;
+                    <div id="prog-name"></div>&emsp;
+                    <div id="prog-pgfc"></div>/
+                    <div id="prog-ttfc"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+@if (HttpContext.Session.Get<bool>("DLQueryProgress") || HttpContext.Session.Get<bool>("LQueryProgress"))
+{
+    <script>
+        $("#prog").show();
+        @if (HttpContext.Session.Get<bool>("LQueryProgress"))
+        {
+            @:Launcher_Launch();
+        }
+        else
+        {
+            @:Launcher_Download();
+        }
+    </script>
+}
+
+@if (!HttpContext.Session.Get<bool>("DLQueryProgress") && !HttpContext.Session.Get<bool>("LQueryProgress"))
+{
+    <form id="form-login" method="post">
+        <div class="form-group">
+            <label for="memory">@Translation.Translate("launcher-memory")</label>
+            <input type="number" class="form-control" value="@(Request.Cookies["Memory"] != null ? Request.Cookies["Memory"] : "1024")" id="memory" asp-for="Memory">
+        </div>
+        <div class="form-group">
+            <label for="username">@Translation.Translate("launcher-username")</label>
+            <input type="text" class="form-control" value="@Request.Cookies["Username"]" id="username" asp-for="Username">
+        </div>
+        <div class="form-group">
+            <label for="password">@Translation.Translate("launcher-password")</label>
+            <input type="password" class="form-control" value="@Request.Cookies["Password"]" id="password" asp-for="Password">
+        </div>
+        <div class="form-group">
+            <label for="version">@Translation.Translate("launcher-version")</label>
+            <select class="form-control" id="version" for="version" asp-for="Version">
+                @foreach (var ver in LauncherModel.LoadVersions())
+                {
+                    <option value="@ver.Name">@ver.Name</option>
+                }
+            </select>
+            <script>
+                document.querySelector('#version').value = "@(Request.Cookies["Version"] != null ? Request.Cookies["Version"] : "1.16.5")";
+            </script>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="fullscreen" asp-for="Fullscreen">
+            <label class="form-check-label" for="fullscreen">@Translation.Translate("launcher-fullscreen")</label>
+            <script>
+                document.querySelector('#fullscreen').checked = @(Request.Cookies["Fullscreen"] == "True" ? "true" : "false");
+            </script>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary" asp-page-handler="login" onclick="$('#form-login').hide();$('#prog').show();Launcher_Launch();">@Translation.Translate("launcher-login")</button>
+        &emsp;
+        <button type="submit" class="btn btn-primary" asp-page-handler="register">@Translation.Translate("launcher-register")</button>
+        &emsp;
+        <button type="submit" class="btn btn-primary" asp-page-handler="download" onclick="$('#form-login').hide();$('#prog').show();Launcher_Download();">@Translation.Translate("launcher-download")</button>
+    </form>
+}
+
+<br />
+<div id="prep-down" class="alert alert-secondary collapse" role="alert">
+    @Translation.Translate("launcher-prep-dl")
+</div>
