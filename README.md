@@ -12,7 +12,7 @@ Properties of Minecraft Vast-Light (including its name, websites, icons, etc.) i
 
 ### Libraries
 
-- .NET 5.0
+- .NET 5
 - BMCLAPI
 - Bootstrap
 - CmlLib.Core

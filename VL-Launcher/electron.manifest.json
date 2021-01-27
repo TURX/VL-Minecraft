@@ -11,10 +11,16 @@
     "appId": "launcher.vl.cstu.xyz",
     "productName": "VL-Launcher",
     "copyright": "Copyright © 2021 TURX",
-    "buildVersion": "0.0.2",
+    "buildVersion": "0.0.4",
     "compression": "maximum",
+    "mac": {
+      "icon": "bin/wwwroot/favicon.icns"
+    },
+    "linux": {
+      "icon": "bin/wwwroot/favicon.png"
+    },
     "win": {
-      "icon": "bin/Icons/icon.ico"
+      "icon": "bin/wwwroot/favicon.ico"
     },
     "directories": {
       "output": "../../../bin/Desktop"

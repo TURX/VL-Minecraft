@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using CmlLib.Core;
 
 namespace VL_Launcher
 {
@@ -94,6 +95,34 @@ namespace VL_Launcher
             if (dir.Contains(".app") && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 dir = new Regex("^.*(?=/.*.app)").Match(dir).ToString();
             return dir;
+        }
+
+        public static string GetJava(CMLauncher launcher)
+        {
+            string path;
+            if (MRule.OSName != "windows")
+            {
+                path = "/usr/bin/java";
+            } else
+            {
+                var p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.Arguments = "/c where javaw.exe 2>&1";
+                p.Start();
+                string o = p.StandardOutput.ReadToEnd();
+                p.WaitForExit();
+                if (o.Contains("javaw.exe"))
+                {
+                    path = o;
+                } else
+                {
+                    path = launcher.CheckJRE();
+                }
+            }
+            Console.WriteLine("[Java] " + path);
+            return path;
         }
     }
 }

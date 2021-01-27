@@ -70,6 +70,11 @@ namespace VL_Launcher
             var mainWindow = await Electron.WindowManager.CreateWindowAsync(options);
             mainWindow.OnReadyToShow += () =>
             {
+                mainWindow.SetMenuBarVisibility(false);
+                mainWindow.OnClose += () =>
+                {
+                    Electron.App.Quit();
+                };
                 mainWindow.Show();
             };
         }

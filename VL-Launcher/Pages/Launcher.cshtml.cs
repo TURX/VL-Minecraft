@@ -32,22 +32,34 @@ namespace VL_Launcher.Pages
 
         public void ChangeOption(string rootPath, string lang)
         {
-            if (!System.IO.File.Exists(rootPath + "/options.txt")) {
-                return;
-            }
-            string[] properties = System.IO.File.ReadAllLines(rootPath + "/options.txt");
-            for (int t = 0; t < properties.Length; t++)
+            string[] properties;
+            if (System.IO.File.Exists(rootPath + "/options.txt"))
             {
-                if (properties[t].Split(':')[0] == "gamma")
+                properties = System.IO.File.ReadAllLines(rootPath + "/options.txt");
+                for (int t = 0; t < properties.Length; t++)
                 {
-                    properties[t] = properties[t].Replace("1", "0").Replace("2", "0").Replace("3", "0").Replace("4", "0").Replace("5", "0").Replace("6", "0").Replace("7", "0").Replace("8", "0").Replace("9", "0");
-                    continue;
+                    if (properties[t].Split(':')[0] == "gamma")
+                    {
+                        properties[t] = properties[t].Replace("1", "0").Replace("2", "0").Replace("3", "0").Replace("4", "0").Replace("5", "0").Replace("6", "0").Replace("7", "0").Replace("8", "0").Replace("9", "0");
+                        continue;
+                    }
+                    if (properties[t].Split(':')[0] == "lang")
+                    {
+                        properties[t] = "lang:" + lang;
+                        continue;
+                    }
                 }
-                if (properties[t].Split(':')[0] == "lang")
+            }
+            else
+            {
+                properties = new string[]
                 {
-                    properties[t] = "lang:" + lang;
-                    continue;
-                }
+                    "lang:" + lang,
+                    "lastServer:124.71.131.172",
+                    "skipMultiplayerWarning:true",
+                    "joinedFirstServer:true",
+                    "gamma:0.0"
+                };
             }
             System.IO.File.WriteAllLines(rootPath + "/options.txt", properties);
         }
@@ -66,7 +78,7 @@ namespace VL_Launcher.Pages
             if (!account.IsSuccess)
                 return account.Result.ToString() + '\n' + account.ErrorMessage;
             var session = account.Session;
-            var mcp = new MinecraftPath(Utility.GetWorkingDir() + "/.minecraft");
+            var mcp = new MinecraftPath(Path.Combine(Utility.GetWorkingDir(), ".minecraft"));
             ChangeOption(mcp.BasePath, Thread.CurrentThread.CurrentUICulture.Name.Replace('-', '_').ToLower());
             var launcher = new CMLauncher(mcp);
             launcher.FileChanged += (e) => {
@@ -83,15 +95,18 @@ namespace VL_Launcher.Pages
                 MaximumRamMb = memory,
                 Session = session,
                 FullScreen = fullScreen,
-                ServerIp = "halcyonazure.cn",
+                ServerIp = "124.71.131.172",
                 ServerPort = 25565,
-                JavaPath = MRule.OSName == "osx" || MRule.OSName == "linux" ? "/usr/bin/java" : launcher.CheckJRE(),
+                JavaPath = Utility.GetJava(launcher),
                 JVMArguments = new string[] {
                     "-javaagent:../nide8auth.jar=28f8f58a8a7f11e88feb525400b59b6a",
                     "-Dnide8auth.client=true"
                 }
             };
             var process = launcher.CreateProcess(version, launchOption);
+            Console.WriteLine("[Launch] FileName: " + process.StartInfo.FileName);
+            Console.WriteLine("[Launch] Arguments: " + process.StartInfo.Arguments);
+            Console.WriteLine("[Launch] WorkingDirectory: " + process.StartInfo.WorkingDirectory);
             process.Start();
             return string.Empty;
         }
@@ -161,7 +176,7 @@ namespace VL_Launcher.Pages
 
         public static MVersionCollection LoadVersions()
         {
-            var mcp = new MinecraftPath();
+            var mcp = new MinecraftPath(Path.Combine(Utility.GetWorkingDir(), ".minecraft"));
             var launcher = new CMLauncher(mcp);
             return launcher.GetAllVersions();
         }
@@ -196,12 +211,7 @@ namespace VL_Launcher.Pages
                 DLTotFileCnt = "?";
                 DLProgressPercentage = "0";
                 DLSuccess = "false";
-                var defaultPath = MinecraftPath.GetOSDefaultPath();
-                var path = Path.Combine(Environment.CurrentDirectory, ".minecraft");
-                var minecraft = new MinecraftPath(path)
-                {
-                    Assets = Path.Combine(defaultPath, "assets")
-                };
+                var minecraft = new MinecraftPath(Path.Combine(Utility.GetWorkingDir(), ".minecraft"));
                 var versionMetadatas = new MVersionLoader().GetVersionMetadatas(minecraft);
                 var version = versionMetadatas.GetVersion("1.16.5");
                 MDownloader downloader = new MDownloader(minecraft, version);
